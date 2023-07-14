@@ -41,6 +41,11 @@ else
     {
         await Task.Delay(500);
         @* _categories = await Http.GetFromJsonAsync<List<Category>>("v1/categories"); *@
+
+        var client = new RestClient();
+        var request = new RestRequest($"{Configuration.ApiUrl}/v1/categories");
+
+        _categories = await client.GetAsync<List<Category>?>(request);
     }
 
 }
