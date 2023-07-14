@@ -10,4 +10,7 @@ builder.RootComponents.Add<App>("#app");
 // Permite que o título da página seja trocada com o <PageTitle></PageTitle> no Index.razor
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
+// Existe essa forma abaixo de habilitar requisições HTTP e também com um pacote chamado REST Sharp
+builder.Services.AddScoped(IServiceProvider => new HttpClient { BaseAddress = new Uri("http://localhost:5095/") });
+
 await builder.Build().RunAsync();
