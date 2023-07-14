@@ -11,6 +11,6 @@ builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
 // Existe essa forma abaixo de habilitar requisições HTTP e também com um pacote chamado REST Sharp
-builder.Services.AddScoped(IServiceProvider => new HttpClient { BaseAddress = AppState.BaseUri });
+// builder.Services.AddScoped(IServiceProvider => new HttpClient { BaseAddress = AppState.BaseUri });
 
 await builder.Build().RunAsync();

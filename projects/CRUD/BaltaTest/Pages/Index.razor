@@ -1,7 +1,7 @@
 ﻿@page "/"
-@inject HttpClient Http
+@using RestSharp
 
-<PageTitle>Index</PageTitle>
+<PageTitle>Categorias</PageTitle>
 
 
 @if(_categories is null)
@@ -40,7 +40,7 @@ else
     protected override async Task OnInitializedAsync()
     {
         await Task.Delay(500);
-        _categories = await Http.GetFromJsonAsync<List<Category>>("v1/categories");
+        @* _categories = await Http.GetFromJsonAsync<List<Category>>("v1/categories"); *@
     }
 
 }
