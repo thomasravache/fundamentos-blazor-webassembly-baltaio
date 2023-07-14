@@ -17,4 +17,5 @@ namespace BaltaTest;
 public static class AppState
 {
     public static string LoggedUser { get; set; } = string.Empty;
+    public static Uri BaseUri { get; private set; } = new Uri("http://localhost:5095/");
 }
