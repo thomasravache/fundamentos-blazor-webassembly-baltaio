@@ -35,21 +35,19 @@ else
 
 <hr>
 
-<form>
-  <div class="form-group">
+<div class="form-group">
     <label class="form-label">ID</label>
     <input type="text" class="form-control" @bind="_category.Id">
-  </div>
-  <div class="form-group">
+</div>
+<div class="form-group">
     <label class="form-label">Title</label>
     <input type="text" class="form-control" @bind="_category.Title">
-  </div>
-  <div class="form-group">
+</div>
+<div class="form-group">
     <label class="form-label">Description</label>
     <input type="text" class="form-control" @bind="_category.Description">
-  </div>
-  <button type="submit" class="btn btn-primary">Submit</button>
-</form>
+</div>
+<button class="btn btn-primary" @onclick="PostAsync">Submit</button>
 
 @code {
 
@@ -67,4 +65,20 @@ else
         _categories = await client.GetAsync<List<Category>?>(request);
     }
 
+    private async Task PostAsync()
+    {
+        var client = new RestClient();
+
+        var request = new RestRequest($"{Configuration.ApiUrl}/v1/categories")
+            .AddJsonBody(_category);
+
+        var category = await client.PostAsync<Category?>(request);
+
+        if (category is not null)
+        {
+            _categories?.Add(_category);
+
+            _category = new Category();
+        }
+    }
 }
