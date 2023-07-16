@@ -18,6 +18,7 @@ else
                 <th>Id</th>
                 <th>Title</th>
                 <th>Description</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
@@ -27,6 +28,11 @@ else
                     <td>@category.Id</td>
                     <td>@category.Title</td>
                     <td>@category.Description</td>
+                    <td>
+                        <button class="btn btn-info" @onclick="() => GetAsync(category.Id)">
+                            EDIT
+                        </button>
+                    </td>
                 </tr>
             }
         </tbody>
@@ -69,16 +75,28 @@ else
     {
         var client = new RestClient();
 
+        if (_category is null) return;
+
         var request = new RestRequest($"{Configuration.ApiUrl}/v1/categories")
             .AddJsonBody(_category);
 
         var category = await client.PostAsync<Category?>(request);
 
-        if (category is not null)
-        {
-            _categories?.Add(_category);
+        _categories?.Add(_category);
 
-            _category = new Category();
-        }
+        _category = new Category();
+    }
+
+    public async Task GetAsync(int id)
+    {
+        var client = new RestClient();
+
+        var request = new RestRequest($"{Configuration.ApiUrl}/v1/categories/{id}");
+
+        var category = await client.GetAsync<Category?>(request);
+
+        if (category is null) return;
+
+        _category = category;
     }
 }
