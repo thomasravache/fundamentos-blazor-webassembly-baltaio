@@ -33,9 +33,28 @@ else
     </table>
 }
 
+<hr>
+
+<form>
+  <div class="form-group">
+    <label class="form-label">ID</label>
+    <input type="text" class="form-control" @bind="_category.Id">
+  </div>
+  <div class="form-group">
+    <label class="form-label">Title</label>
+    <input type="text" class="form-control" @bind="_category.Title">
+  </div>
+  <div class="form-group">
+    <label class="form-label">Description</label>
+    <input type="text" class="form-control" @bind="_category.Description">
+  </div>
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
 @code {
 
     private List<Category>? _categories;
+    private Category _category = new();
 
     protected override async Task OnInitializedAsync()
     {
