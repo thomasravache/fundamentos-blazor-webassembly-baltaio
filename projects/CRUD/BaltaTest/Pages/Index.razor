@@ -42,8 +42,8 @@ else
 <hr>
 
 <div class="form-group">
-    <label class="form-label">ID</label>
-    <input type="text" class="form-control" @bind="_category.Id">
+    @* <label class="form-label">ID</label> *@
+    <input type="hidden" class="form-control" @bind="_category.Id">
 </div>
 <div class="form-group">
     <label class="form-label">Title</label>
@@ -53,7 +53,7 @@ else
     <label class="form-label">Description</label>
     <input type="text" class="form-control" @bind="_category.Description">
 </div>
-<button class="btn btn-primary" @onclick="PostAsync">Submit</button>
+<button class="btn btn-primary" @onclick="UpsertAsync">SAVE</button>
 
 @code {
 
@@ -71,18 +71,41 @@ else
         _categories = await client.GetAsync<List<Category>?>(request);
     }
 
-    private async Task PostAsync()
+    // Pode ter o nome Save ou Upsert -> Upsert é o nome pra quando queremos atualizar e salvar no mesmo método
+    private async Task UpsertAsync()
     {
-        var client = new RestClient();
-
         if (_category is null) return;
 
-        var request = new RestRequest($"{Configuration.ApiUrl}/v1/categories")
-            .AddJsonBody(_category);
+        var client = new RestClient();
+        Category? category;
 
-        var category = await client.PostAsync<Category?>(request);
+        if (_category.Id == 0)
+        {
+            var request = new RestRequest($"{Configuration.ApiUrl}/v1/categories")
+                .AddJsonBody(_category);
 
-        _categories?.Add(_category);
+            category = await client.PostAsync<Category?>(request);
+
+            _categories?.Add(_category);
+        }
+        else
+        {
+            var request = new RestRequest($"{Configuration.ApiUrl}/v1/categories/{_category.Id}")
+                .AddJsonBody(_category);
+
+            category = await client.PutAsync<Category?>(request);
+
+            if (category is not null)
+            {
+                var categoryItem = _categories?.FirstOrDefault(x => category.Id == x.Id);
+
+                if (categoryItem is not null)
+                {
+                    categoryItem.Title = category.Title;
+                    categoryItem.Description = category.Description;
+                }
+            }
+        }
 
         _category = new Category();
     }
