@@ -32,9 +32,6 @@ else
                         <button class="btn btn-info" @onclick="() => GetAsync(category.Id)">
                             EDIT
                         </button>
-                        <button class="btn btn-danger" @onclick="() => DeleteAsync(category.Id)">
-                            REMOVE
-                        </button>
                     </td>
                 </tr>
             }
@@ -56,7 +53,25 @@ else
     <label class="form-label">Description</label>
     <input type="text" class="form-control" @bind="_category.Description">
 </div>
-<button class="btn btn-primary" @onclick="UpsertAsync">SAVE</button>
+
+<br>
+
+<button class="btn btn-primary mr-1" @onclick="UpsertAsync">
+    @if(_category.Id is not 0)
+    {
+        <span>EDIT</span>
+    }
+    else
+    {
+        <span>CREATE</span>
+    }
+</button>
+<button class="btn btn-info mr-1" @onclick="NewCategory">NEW</button>
+@if (_category.Id is not 0)
+{
+    <button class="btn btn-danger mr-1" @onclick="DeleteAsync">REMOVE</button>
+}
+
 
 @code {
 
@@ -126,20 +141,23 @@ else
         _category = category;
     }
 
-    public async Task DeleteAsync(int id)
+    public async Task DeleteAsync()
     {
         var client = new RestClient();
-        var request = new RestRequest($"{Configuration.ApiUrl}/v1/categories/{id}");
+        var request = new RestRequest($"{Configuration.ApiUrl}/v1/categories/{_category.Id}");
 
         try 
         {
             var category = await client.DeleteAsync<Category?>(request);
 
-            _categories?.Remove(_categories.First(x => x.Id == id));
+            _categories?.Remove(_categories.First(x => x.Id == _category.Id));
+            _category = new();
         }
         catch
         {
         }
         
     }
+
+    public void NewCategory() => _category = new();
 }
