@@ -66,9 +66,9 @@ else
         <span>CREATE</span>
     }
 </button>
-<button class="btn btn-info mr-1" @onclick="NewCategory">NEW</button>
 @if (_category.Id is not 0)
 {
+    <button class="btn btn-info mr-1" @onclick="NewCategory">NEW</button>
     <button class="btn btn-danger mr-1" @onclick="DeleteAsync">REMOVE</button>
 }
 
