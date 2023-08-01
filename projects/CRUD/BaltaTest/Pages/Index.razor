@@ -54,7 +54,12 @@ else
     <input type="text" class="form-control" @bind="_category.Description">
 </div>
 
-<br>
+@if (_deleted)
+{
+    <div class="alert alert-danger" role="alert">
+        Categoria excluída com sucesso!
+    </div>
+}
 
 <button class="btn btn-primary mr-1" @onclick="UpsertAsync">
     @if(_category.Id is not 0)
@@ -74,6 +79,7 @@ else
 
 
 @code {
+    private bool _deleted = false;
 
     private List<Category>? _categories;
     private Category _category = new();
@@ -152,6 +158,8 @@ else
 
             _categories?.Remove(_categories.First(x => x.Id == _category.Id));
             _category = new();
+            
+            _deleted = true;
         }
         catch
         {
